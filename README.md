@@ -57,7 +57,7 @@ The public contract suite uses isolated in-memory/synthetic fixtures and has no 
 
 ## Relationship to Runalith
 
-This repository extracts the artifact and success-contract primitives used by [Runalith](https://github.com/nplongx/runalith). Workflow compiler, role/action-intent contracts, policy/custom-role stores, plan persistence and execution remain separate host-owned modules until their dependency and ownership boundaries are independently extracted.
+This repository extracts the artifact and success-contract primitives used by [Runalith](https://github.com/nplongx/runalith). The host [subsystem architecture map](https://github.com/nplongx/runalith/blob/main/docs/subsystems/README.md) and [Workflow Contracts boundary note](https://github.com/nplongx/runalith/blob/main/docs/subsystems/workflow-contracts.md) describe the consumer and ownership boundaries. Workflow compiler, role/action-intent contracts, policy/custom-role stores, plan persistence and execution remain separate host-owned modules until their dependency and ownership boundaries are independently extracted.
 
 ## License
 
