@@ -31,3 +31,16 @@ export {
   createAggCheckpointV2DigestEnvelope,
   computeAggCheckpointV2DomainDigest
 } from './src/runtime/workflow/agg-checkpoint-jcs-v2.js';
+
+export {
+  OWNER_APPROVAL_SCHEMA_VERSION,
+  OWNER_APPROVAL_DOMAIN,
+  OWNER_APPROVAL_SCOPE,
+  OWNER_APPROVAL_MAX_TTL_MS,
+  OWNER_APPROVAL_DISPATCH_OPERATION_ID,
+  OWNER_APPROVAL_DISPATCH_OPERATION_VERSION,
+  OWNER_APPROVAL_HUMAN_PRESENCE,
+  OWNER_APPROVAL_ALLOWED_ACTION_IDS,
+  canonicalOwnerApprovalJson,
+  ownerApprovalDispatchArgumentsDigest
+} from './src/runtime/workflow/owner-approval-contract.js';

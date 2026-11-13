@@ -1,6 +1,6 @@
 # Runalith Workflow Contracts
 
-Pure JavaScript contract primitives for durable artifact DTOs, typed workflow success predicates, strict JSON parsing and AGG External Checkpoint v2 canonical JSON/digest contracts.
+Pure JavaScript contract primitives for durable artifact DTOs, typed workflow success predicates, strict JSON parsing and AGG External Checkpoint v2 canonical JSON/digest contracts, and the pure Owner Approval v1 envelope vocabulary/canonicalization contract.
 
 <p>
   <a href="https://github.com/nplongx/runalith-workflow-contracts/actions"><img alt="CI" src="https://github.com/nplongx/runalith-workflow-contracts/actions/workflows/ci.yml/badge.svg"></a>
@@ -29,11 +29,15 @@ import {
   parseStrictJson,
   parseAggCheckpointV2Json,
   canonicalizeAggCheckpointV2Jcs,
-  computeAggCheckpointV2DomainDigest
+  computeAggCheckpointV2DomainDigest,
+  OWNER_APPROVAL_DOMAIN,
+  OWNER_APPROVAL_SCOPE,
+  canonicalOwnerApprovalJson,
+  ownerApprovalDispatchArgumentsDigest
 } from '@runalith/workflow-contracts';
 ```
 
-This package covers pure artifact/success contracts, strict JSON handling and the JavaScript binding for the AGG External Checkpoint v2 JSON/JCS profile. It does not include workflow compilation, role/action-intent profiles, custom workflow or policy persistence, plan storage, trust-root administration, approval, or execution.
+This package covers pure artifact/success contracts, strict JSON handling and the JavaScript binding for the AGG External Checkpoint v2 JSON/JCS profile. It does not include workflow compilation, role/action-intent profiles, custom workflow or policy persistence, plan storage, trust-root administration, Ed25519 signature verification, approval persistence, or execution. Owner Approval v1 exports only a pure signed-envelope vocabulary/canonical JSON/digest contract; signature verification and durable approval decisions remain host/Trust Governance responsibilities.
 
 ## Contract semantics
 
@@ -47,7 +51,7 @@ This package covers pure artifact/success contracts, strict JSON handling and th
 
 Passing a structural contract is not proof that a workflow was approved, a task actually ran, an artifact was produced by a trusted actor, or a claim is true. Artifact hash validation establishes byte identity only. The caller must independently resolve artifact status, producer/result/attempt/completion lineage, reviewer trust and current workflow authority before treating records as eligible evidence.
 
-This package has no SQLite, filesystem, network, MCP, provider or approval implementation. Checkpoint JCS establishes canonical bytes/digests only; it does not verify signatures, trust roots, checkpoint custody or external continuity. It cannot dispatch work or mutate workflow state.
+This package has no SQLite, filesystem, network, MCP, provider or approval implementation. Checkpoint JCS establishes canonical bytes/digests only; it does not verify signatures, trust roots, checkpoint custody or external continuity. It cannot dispatch work or mutate workflow state. Owner Approval exports do not load keys, verify Ed25519 signatures, administer trust roots, or record approval consumption. An empty allowed-action list intentionally means no business action is currently authorized by this contract.
 
 ## Development
 

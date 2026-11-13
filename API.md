@@ -93,3 +93,23 @@ Raw input rule: externally supplied JSON must first pass through parseAggCheckpo
 Security limit: a canonical digest proves deterministic representation of supplied content. It is not a signature, trust-root verification, custody proof, source/commit attestation or approval decision. Those remain separate Trust Governance and host responsibilities.
 
 The JavaScript tests consume the exact shared vector file from nplongx/protocol-contracts at tests/fixtures/agg-checkpoint-v2-jcs-vectors.json. The copied fixture SHA-256 is d4034f928c2afa7ce9c3f0e23ec7562d4a1a8fbeeebb18e2db08b3273261452a. Rust and JavaScript must continue to pass those same vectors before a normative protocol change is accepted.
+
+
+## Owner Approval v1 pure contract exports
+
+The package exports the host-neutral vocabulary and canonicalization rules used by the local Owner Approval v1 envelope. These exports do not verify signatures or issue approvals.
+
+| Export | Purpose |
+|---|---|
+| `OWNER_APPROVAL_SCHEMA_VERSION` | Envelope schema version `1`. |
+| `OWNER_APPROVAL_DOMAIN` | `runalith.owner-approval.v1`. |
+| `OWNER_APPROVAL_SCOPE` | `workflow.dispatch`. |
+| `OWNER_APPROVAL_MAX_TTL_MS` | Maximum owner approval TTL: 15 minutes. |
+| `OWNER_APPROVAL_DISPATCH_OPERATION_ID` | `runalith.workflow.dispatch.v1`. |
+| `OWNER_APPROVAL_DISPATCH_OPERATION_VERSION` | Operation version `1`. |
+| `OWNER_APPROVAL_HUMAN_PRESENCE` | `controlling_tty.v1`. |
+| `OWNER_APPROVAL_ALLOWED_ACTION_IDS` | Frozen allowlist; currently empty, so no business action is enabled. |
+| `canonicalOwnerApprovalJson(value)` | Deterministic canonical JSON for plain JSON-compatible values, arrays and safe integers. Rejects cycles, unsupported prototypes, unpaired Unicode, negative zero, unsafe integers and undefined. |
+| `ownerApprovalDispatchArgumentsDigest(input)` | SHA-256 digest of exact job/plan/role/action tuple. Requires a currently allowlisted action ID; with the current empty allowlist it fails closed. |
+
+The owner-approval implementation in the host remains responsible for key loading, Ed25519 signing/verification, trust-root disjointness, key rotation/revocation, signature scope/freshness, nonce consumption and durable audit. This pure contract exports must not be interpreted as cryptographic verification or an approval decision.
