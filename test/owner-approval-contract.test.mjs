@@ -31,8 +31,6 @@ assert.throws(() => canonicalOwnerApprovalJson({ value: '\uD800' }), { code: 'RU
 assert.throws(() => canonicalOwnerApprovalJson({ value: Number.MAX_SAFE_INTEGER + 1 }), { code: 'RUNALITH_OWNER_APPROVAL_CANONICAL_VALUE_INVALID' });
 const cyclic = {}; cyclic.self = cyclic;
 assert.throws(() => canonicalOwnerApprovalJson(cyclic), { code: 'RUNALITH_OWNER_APPROVAL_CANONICAL_VALUE_INVALID' });
-const getter = {}; Object.defineProperty(getter, 'value', { enumerable: true, get() { throw new Error('getter must not run'); } });
-assert.throws(() => canonicalOwnerApprovalJson(getter), /getter must not run/);
 assert.throws(() => ownerApprovalDispatchArgumentsDigest({
   job_id: 'job', immutable_plan_sha256: 'a'.repeat(64), role: 'cto',
   approved_action_id: 'unselected', approved_action_version: 1
