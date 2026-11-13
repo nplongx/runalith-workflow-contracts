@@ -1,6 +1,6 @@
 # Runalith Workflow Contracts
 
-Pure JavaScript contract primitives for durable artifact DTOs, typed workflow success predicates and strict JSON evidence parsing.
+Pure JavaScript contract primitives for durable artifact DTOs, typed workflow success predicates, strict JSON parsing and AGG External Checkpoint v2 canonical JSON/digest contracts.
 
 <p>
   <a href="https://github.com/nplongx/runalith-workflow-contracts/actions"><img alt="CI" src="https://github.com/nplongx/runalith-workflow-contracts/actions/workflows/ci.yml/badge.svg"></a>
@@ -26,11 +26,14 @@ import {
   validateSuccessContract,
   evaluateSuccessPredicate,
   validateSuccessAssessment,
-  parseStrictJson
+  parseStrictJson,
+  parseAggCheckpointV2Json,
+  canonicalizeAggCheckpointV2Jcs,
+  computeAggCheckpointV2DomainDigest
 } from '@runalith/workflow-contracts';
 ```
 
-This release deliberately covers only the pure artifact and success-contract kernel. It does not include workflow compilation, role/action-intent profiles, custom workflow or policy persistence, plan storage, approval, or execution.
+This package covers pure artifact/success contracts, strict JSON handling and the JavaScript binding for the AGG External Checkpoint v2 JSON/JCS profile. It does not include workflow compilation, role/action-intent profiles, custom workflow or policy persistence, plan storage, trust-root administration, approval, or execution.
 
 ## Contract semantics
 
@@ -44,7 +47,7 @@ This release deliberately covers only the pure artifact and success-contract ker
 
 Passing a structural contract is not proof that a workflow was approved, a task actually ran, an artifact was produced by a trusted actor, or a claim is true. Artifact hash validation establishes byte identity only. The caller must independently resolve artifact status, producer/result/attempt/completion lineage, reviewer trust and current workflow authority before treating records as eligible evidence.
 
-This package has no SQLite, filesystem, network, MCP, provider or approval implementation. It cannot dispatch work or mutate workflow state.
+This package has no SQLite, filesystem, network, MCP, provider or approval implementation. Checkpoint JCS establishes canonical bytes/digests only; it does not verify signatures, trust roots, checkpoint custody or external continuity. It cannot dispatch work or mutate workflow state.
 
 ## Development
 

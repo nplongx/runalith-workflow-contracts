@@ -68,3 +68,28 @@ Caller may set `options.maxBytes` from 1 byte to 256 MiB. Parser input node coun
 ## Explicitly excluded APIs
 
 This package does not export Runalith role/action-intent contracts because compiled action-intent validation currently depends on AGG-owned semantic policy. It also excludes workflow definitions/compiler, immutable plan compilation, policy/custom-role persistence, role overlays, workspace capability contracts, approval, trust verification and execution dispatch. Those remain host adapters or separate future packages.
+
+## AGG External Checkpoint v2 JSON/JCS exports
+
+The package exports the JavaScript binding for the same constrained JSON/JCS profile implemented by nplongx/protocol-contracts, module agg_checkpoint_v2.
+
+| Export | Purpose |
+|---|---|
+| AGG_CHECKPOINT_V2_PROTOCOL_ID | runalith.agg.external-checkpoint. |
+| AGG_CHECKPOINT_V2_PROTOCOL_VERSION | Protocol version 2. |
+| AGG_CHECKPOINT_V2_MAX_JSON_BYTES | Maximum raw JSON and canonical output size: 1 MiB. |
+| AGG_CHECKPOINT_V2_MAX_JSON_DEPTH | Maximum JSON nesting depth: 256, root at depth zero. |
+| AGG_CHECKPOINT_V2_MAX_JSON_NODES | Maximum materialized JSON value nodes: 1,000,000. |
+| parseAggCheckpointV2Json(input, options?) | Parse original Uint8Array bytes. Strings are rejected so prior decoding cannot erase duplicate raw keys or byte identity. |
+| canonicalizeAggCheckpointV2Jcs(value) | Canonicalize a constrained I-JSON value with RFC 8785 key ordering/number serialization and protocol bounds. |
+| canonicalizeAggCheckpointV2JcsBytes(value) | Return canonical UTF-8 bytes. |
+| createAggCheckpointV2DigestEnvelope({domain,version,payload}) | Create the protocol/version/domain/component-version envelope used for digest separation. |
+| computeAggCheckpointV2DomainDigest({domain,version,payload}) | SHA-256 digest of canonical envelope bytes. |
+
+The constrained value profile rejects non-finite numbers, negative zero, unsafe integer-valued numbers, unpaired surrogates, cycles, proxies/accessors, sparse or custom-prototype arrays, non-plain objects, symbol keys, excessive depth/nodes and canonical output over 1 MiB. Domain identifiers use lowercase protocol syntax and component versions must be positive safe integers.
+
+Raw input rule: externally supplied JSON must first pass through parseAggCheckpointV2Json(originalBytes). Passing an object produced by a different parser to the canonicalizer cannot reveal duplicate names already discarded by that parser.
+
+Security limit: a canonical digest proves deterministic representation of supplied content. It is not a signature, trust-root verification, custody proof, source/commit attestation or approval decision. Those remain separate Trust Governance and host responsibilities.
+
+The JavaScript tests consume the exact shared vector file from nplongx/protocol-contracts at tests/fixtures/agg-checkpoint-v2-jcs-vectors.json. The copied fixture SHA-256 is d4034f928c2afa7ce9c3f0e23ec7562d4a1a8fbeeebb18e2db08b3273261452a. Rust and JavaScript must continue to pass those same vectors before a normative protocol change is accepted.
